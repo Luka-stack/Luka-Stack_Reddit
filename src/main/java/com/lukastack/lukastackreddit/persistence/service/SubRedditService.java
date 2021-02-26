@@ -2,6 +2,7 @@ package com.lukastack.lukastackreddit.persistence.service;
 
 import com.lukastack.lukastackreddit.dto.SubRedditDto;
 import com.lukastack.lukastackreddit.error.exceptions.SubRedditNotFoundException;
+import com.lukastack.lukastackreddit.mapper.SubRedditMapper;
 import com.lukastack.lukastackreddit.persistence.entity.SubRedditEntity;
 import com.lukastack.lukastackreddit.persistence.repository.SubRedditRepository;
 import lombok.AllArgsConstructor;
@@ -10,7 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static java.time.Instant.now;
 import static java.util.stream.Collectors.toList;
 
 @Service
@@ -18,12 +18,13 @@ import static java.util.stream.Collectors.toList;
 public class SubRedditService {
 
     private final SubRedditRepository subRedditRepository;
+    private final SubRedditMapper subRedditMapper;
     private final AuthService authService;
 
     @Transactional
     public SubRedditDto save(SubRedditDto subRedditDto) {
 
-        SubRedditEntity subReddit = subRedditRepository.save(mapToSubReddit(subRedditDto));
+        SubRedditEntity subReddit = subRedditRepository.save(subRedditMapper.mapToSubReddit(subRedditDto, authService.getCurrentUser()));
         subRedditDto.setId(subReddit.getSubId());
 
         return subRedditDto;
@@ -35,7 +36,7 @@ public class SubRedditService {
         SubRedditEntity subReddit = subRedditRepository.findById(id).orElseThrow(
                 () -> new SubRedditNotFoundException("SubReddit with id #"+ id +" not found"));
 
-        return new SubRedditDto(subReddit);
+        return subRedditMapper.mapSubRedditToDto(subReddit);
     }
 
     @Transactional(readOnly = true)
@@ -43,16 +44,7 @@ public class SubRedditService {
 
         return subRedditRepository.findAll()
                 .stream()
-                .map(SubRedditDto::new)
+                .map(subRedditMapper::mapSubRedditToDto)
                 .collect(toList());
-    }
-
-    private SubRedditEntity mapToSubReddit(SubRedditDto subRedditDto) {
-
-        return SubRedditEntity.builder()
-                .name("/r/" + subRedditDto.getName())
-                .description(subRedditDto.getDescription())
-                .user(authService.getCurrentUser())
-                .createdDate(now()).build();
     }
 }

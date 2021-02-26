@@ -15,7 +15,7 @@ public class CommentEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private Long voteId;
+    private Long commentId;
 
     @NotEmpty
     private String text;
