@@ -4,6 +4,7 @@ import com.lukastack.lukastackreddit.dto.AuthenticationResponse;
 import com.lukastack.lukastackreddit.dto.LoginRequest;
 import com.lukastack.lukastackreddit.dto.RegisterRequest;
 import com.lukastack.lukastackreddit.error.exceptions.SpringRedditException;
+import com.lukastack.lukastackreddit.model.NotificationEmail;
 import com.lukastack.lukastackreddit.persistence.entity.UserEntity;
 import com.lukastack.lukastackreddit.persistence.entity.VerificationTokenEntity;
 import com.lukastack.lukastackreddit.persistence.repository.UserRepository;
@@ -31,6 +32,7 @@ public class AuthService {
     private final VerificationTokenRepository tokenRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
+    private final MailService mailService;
     private final JwtProvider jwtProvider;
 
     @Transactional
@@ -45,8 +47,11 @@ public class AuthService {
 
         userRepository.save(newUser);
         String token = generateVerificationToken(newUser);
-
-        //TODO implement mailer
+        mailService.sendMail(new NotificationEmail(
+                "Activate your Account", newUser.getEmail(),
+                "Thank you for signing up to Luka-stack Reddit, "+
+                "please click on the url to activate your account :"+
+                "http://localhost:8080/api/auth/accountVerification/" + token));
     }
 
     public AuthenticationResponse login(LoginRequest loginRequest) {
@@ -80,7 +85,6 @@ public class AuthService {
         fetchAndEnableUser(verificationToken);
     }
 
-    @Transactional
     private void fetchAndEnableUser(VerificationTokenEntity verificationToken) {
 
         String username = verificationToken.getUser().getUsername();

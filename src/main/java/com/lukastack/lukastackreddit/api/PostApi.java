@@ -21,8 +21,8 @@ public interface PostApi {
     ResponseEntity<PostResponse> getPost(@PathVariable Long id);
 
     @GetMapping("/by-subreddit/{id}")
-    ResponseEntity<List<PostResponse>> getPostBySubReddit(Long id);
+    ResponseEntity<List<PostResponse>> getPostBySubReddit(@PathVariable  Long id);
 
-    @GetMapping("/by-user/{name}")
-    ResponseEntity<List<PostResponse>> getPostByUsername(String username);
+    @GetMapping("/by-user/{username}")
+    ResponseEntity<List<PostResponse>> getPostByUsername(@PathVariable String username);
 }

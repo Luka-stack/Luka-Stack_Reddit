@@ -3,6 +3,8 @@ package com.lukastack.lukastackreddit.persistence.service;
 import com.lukastack.lukastackreddit.dto.CommentDto;
 import com.lukastack.lukastackreddit.error.exceptions.PostNotFoundException;
 import com.lukastack.lukastackreddit.mapper.CommentMapper;
+import com.lukastack.lukastackreddit.model.MailContentBuilder;
+import com.lukastack.lukastackreddit.model.NotificationEmail;
 import com.lukastack.lukastackreddit.persistence.entity.CommentEntity;
 import com.lukastack.lukastackreddit.persistence.entity.PostEntity;
 import com.lukastack.lukastackreddit.persistence.entity.UserEntity;
@@ -27,6 +29,8 @@ public class CommentService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
     private final AuthService authService;
+    private final MailService mailService;
+    private final MailContentBuilder mailContentBuilder;
     private final CommentMapper commentMapper;
 
     public void createComment(CommentDto commentDto) {
@@ -35,6 +39,9 @@ public class CommentService {
                 () -> new PostNotFoundException("Post not found"));
         CommentEntity comment = commentMapper.mapToComment(commentDto, post, authService.getCurrentUser());
         commentRepository.save(comment);
+
+        String message = mailContentBuilder.build(authService.getCurrentUser() +" posted a comment on your post.");
+        sendCommentNotification(message, post.getUser());
     }
 
     public List<CommentDto> getCommentByPost(Long postId) {
@@ -57,5 +64,10 @@ public class CommentService {
                 .stream()
                 .map(commentMapper::mapToDto)
                 .collect(Collectors.toList());
+    }
+
+    private void sendCommentNotification(String message, UserEntity user) {
+        mailService.sendMail(new NotificationEmail(user.getPassword() +" Commented on your post",
+                user.getEmail(), message));
     }
 }

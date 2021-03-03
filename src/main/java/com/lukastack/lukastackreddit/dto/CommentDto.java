@@ -19,5 +19,5 @@ public class CommentDto {
 
     private String text;
 
-    private String userName;
+    private String username;
 }

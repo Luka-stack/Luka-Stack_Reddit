@@ -12,9 +12,9 @@ public interface CommentApi {
     @PostMapping
     ResponseEntity<Void> createComment(@RequestBody CommentDto commentDto);
 
-    @GetMapping
-    ResponseEntity<List<CommentDto>> getAllCommentsByPost(@RequestParam Long postId);
+    @GetMapping("/by-post/{postId}")
+    ResponseEntity<List<CommentDto>> getAllCommentsByPost(@PathVariable Long postId);
 
-    @GetMapping
-    ResponseEntity<List<CommentDto>> getAllCommentByUser(@RequestParam String username);
+    @GetMapping("/by-user/{username}")
+    ResponseEntity<List<CommentDto>> getAllCommentByUser(@PathVariable String username);
 }
