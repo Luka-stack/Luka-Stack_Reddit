@@ -24,7 +24,8 @@ public class SubRedditService {
     @Transactional
     public SubRedditDto save(SubRedditDto subRedditDto) {
 
-        SubRedditEntity subReddit = subRedditRepository.save(subRedditMapper.mapToSubReddit(subRedditDto, authService.getCurrentUser()));
+        SubRedditEntity subReddit = subRedditRepository.save(subRedditMapper.mapToSubReddit(subRedditDto,
+                authService.getCurrentUser()));
         subRedditDto.setId(subReddit.getSubId());
 
         return subRedditDto;
@@ -40,7 +41,7 @@ public class SubRedditService {
     }
 
     @Transactional(readOnly = true)
-    public List<SubRedditDto> getAllSubReddits() {
+    public List<SubRedditDto> getAllSubReddit() {
 
         return subRedditRepository.findAll()
                 .stream()

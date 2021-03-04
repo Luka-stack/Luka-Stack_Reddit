@@ -2,6 +2,7 @@ package com.lukastack.lukastackreddit.persistence.service;
 
 import com.lukastack.lukastackreddit.dto.AuthenticationResponse;
 import com.lukastack.lukastackreddit.dto.LoginRequest;
+import com.lukastack.lukastackreddit.dto.RefreshTokenRequest;
 import com.lukastack.lukastackreddit.dto.RegisterRequest;
 import com.lukastack.lukastackreddit.error.exceptions.SpringRedditException;
 import com.lukastack.lukastackreddit.model.NotificationEmail;
@@ -11,6 +12,7 @@ import com.lukastack.lukastackreddit.persistence.repository.UserRepository;
 import com.lukastack.lukastackreddit.persistence.repository.VerificationTokenRepository;
 import com.lukastack.lukastackreddit.security.JwtProvider;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -32,6 +34,7 @@ public class AuthService {
     private final VerificationTokenRepository tokenRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
+    private final RefreshTokenService refreshTokenService;
     private final MailService mailService;
     private final JwtProvider jwtProvider;
 
@@ -63,7 +66,7 @@ public class AuthService {
 
         return AuthenticationResponse.builder()
                 .authenticationToken(token)
-                .refreshToken("")
+                .refreshToken(refreshTokenService.generateRefreshToken().getToken())
                 .expiresAt(Instant.now().plusMillis(jwtProvider.getJwtExpiration()))
                 .username(loginRequest.getUsername())
                 .build();
@@ -83,6 +86,25 @@ public class AuthService {
         VerificationTokenEntity verificationToken = tokenRepository.findByToken(token).orElseThrow(
                 () -> new SpringRedditException("Invalid Token"));
         fetchAndEnableUser(verificationToken);
+    }
+
+    public AuthenticationResponse refreshToken(RefreshTokenRequest refreshTokenRequest) {
+
+        refreshTokenService.validateRefreshToken(refreshTokenRequest.getRefreshToken());
+        String token = jwtProvider.generateToken(refreshTokenRequest.getUsername());
+
+        return AuthenticationResponse.builder()
+                .authenticationToken(token)
+                .refreshToken(refreshTokenRequest.getRefreshToken())
+                .expiresAt(Instant.now().plusMillis(jwtProvider.getJwtExpiration()))
+                .username(refreshTokenRequest.getUsername())
+                .build();
+    }
+
+    public boolean isLoggedIn() {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return !(authentication instanceof AnonymousAuthenticationToken) && authentication.isAuthenticated();
     }
 
     private void fetchAndEnableUser(VerificationTokenEntity verificationToken) {

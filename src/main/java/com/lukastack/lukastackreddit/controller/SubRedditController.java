@@ -3,7 +3,6 @@ package com.lukastack.lukastackreddit.controller;
 import com.lukastack.lukastackreddit.api.SubRedditApi;
 import com.lukastack.lukastackreddit.dto.SubRedditDto;
 import com.lukastack.lukastackreddit.persistence.service.SubRedditService;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,9 +18,9 @@ public class SubRedditController implements SubRedditApi {
     private final SubRedditService subRedditService;
 
     @Override
-    public ResponseEntity<List<SubRedditDto>> getAllSubReddits() {
+    public ResponseEntity<List<SubRedditDto>> getAllSubReddit() {
 
-        return ResponseEntity.ok(subRedditService.getAllSubReddits());
+        return ResponseEntity.ok(subRedditService.getAllSubReddit());
     }
 
     @Override
@@ -31,7 +30,7 @@ public class SubRedditController implements SubRedditApi {
     }
 
     @Override
-    public ResponseEntity<SubRedditDto> createSubReddit(@Valid SubRedditDto subRedditDTO) {
+    public ResponseEntity<SubRedditDto> createSubReddit(SubRedditDto subRedditDTO) {
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(subRedditService.save(subRedditDTO));

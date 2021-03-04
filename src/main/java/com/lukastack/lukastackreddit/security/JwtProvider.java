@@ -13,9 +13,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.security.*;
 import java.security.cert.CertificateException;
+import java.time.Instant;
+import java.util.Date;
 
 import static io.jsonwebtoken.Jwts.parser;
 import static io.jsonwebtoken.Jwts.parserBuilder;
+import static java.util.Date.from;
 
 @Service
 public class JwtProvider {
@@ -43,7 +46,19 @@ public class JwtProvider {
         User principal = (User) authentication.getPrincipal();
         return Jwts.builder()
                 .setSubject(principal.getUsername())
+                .setIssuedAt(from(Instant.now()))
                 .signWith(getPrivateKey())
+                .setExpiration(Date.from(Instant.now().plusMillis(jwtExpiration)))
+                .compact();
+    }
+
+    public String generateToken(String username) {
+
+        return Jwts.builder()
+                .setSubject(username)
+                .setIssuedAt(from(Instant.now()))
+                .signWith(getPrivateKey())
+                .setExpiration(Date.from(Instant.now().plusMillis(jwtExpiration)))
                 .compact();
     }
 
@@ -52,14 +67,13 @@ public class JwtProvider {
     }
 
     public boolean validateToken(String jwToken) {
-//        parser().setSigningKey(getPublicKey()).parseClaimsJws(jwToken);
         Jwts.parserBuilder().setSigningKey(getPublicKey()).build().parseClaimsJws(jwToken);
         return true;
     }
 
     public String getUsernameFromJWT(String jwToken) {
 
-        Claims claims = Jwts.parserBuilder()
+        Claims claims = parserBuilder()
                 .setSigningKey(getPublicKey())
                 .build()
                 .parseClaimsJws(jwToken)

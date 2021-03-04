@@ -11,11 +11,11 @@ import java.util.List;
 public interface SubRedditApi {
 
     @GetMapping
-    ResponseEntity<List<SubRedditDto>> getAllSubReddits();
+    ResponseEntity<List<SubRedditDto>> getAllSubReddit();
 
     @GetMapping("/{id}")
     ResponseEntity<SubRedditDto> getSubReddit(@PathVariable Long id);
 
     @PostMapping
-    ResponseEntity<SubRedditDto> createSubReddit(@RequestBody @Valid SubRedditDto subRedditDTO);
+    ResponseEntity<SubRedditDto> createSubReddit(@Valid @RequestBody SubRedditDto subRedditDTO);
 }

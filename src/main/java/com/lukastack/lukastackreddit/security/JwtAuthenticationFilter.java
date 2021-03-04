@@ -1,6 +1,8 @@
 package com.lukastack.lukastackreddit.security;
 
+import com.lukastack.lukastackreddit.persistence.service.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -24,8 +26,9 @@ public class JwtAuthenticationFilter  extends OncePerRequestFilter {
     private final UserDetailsServiceImpl userDetailsService;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
-                                    FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(@NotNull HttpServletRequest httpServletRequest,
+                                    @NotNull HttpServletResponse httpServletResponse,
+                                    @NotNull FilterChain filterChain) throws ServletException, IOException {
 
         String jwToken = getJwtFromRequest(httpServletRequest);
 
@@ -38,6 +41,8 @@ public class JwtAuthenticationFilter  extends OncePerRequestFilter {
             authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(httpServletRequest));
 
             SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+
+            System.err.println("Valid Token");
         }
 
         filterChain.doFilter(httpServletRequest, httpServletResponse);
@@ -51,6 +56,6 @@ public class JwtAuthenticationFilter  extends OncePerRequestFilter {
             return bearerToken.substring(7);
         }
 
-        return "";
+        return bearerToken;
     }
 }
