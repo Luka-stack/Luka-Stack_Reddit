@@ -10,7 +10,7 @@ import java.util.List;
 public interface CommentApi {
 
     @PostMapping
-    ResponseEntity<Void> createComment(@RequestBody CommentDto commentDto);
+    ResponseEntity<CommentDto> createComment(@RequestBody CommentDto commentDto);
 
     @GetMapping("/by-post/{postId}")
     ResponseEntity<List<CommentDto>> getAllCommentsByPost(@PathVariable Long postId);

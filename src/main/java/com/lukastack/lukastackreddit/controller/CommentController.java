@@ -17,12 +17,9 @@ public class CommentController implements CommentApi {
 
     private final CommentService commentService;
 
-    // TODO return body?
     @Override
-    public ResponseEntity<Void> createComment(CommentDto commentDto) {
-
-        commentService.createComment(commentDto);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+    public ResponseEntity<CommentDto> createComment(CommentDto commentDto) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(commentService.createComment(commentDto));
     }
 
     @Override

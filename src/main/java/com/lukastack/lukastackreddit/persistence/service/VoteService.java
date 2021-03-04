@@ -1,6 +1,7 @@
 package com.lukastack.lukastackreddit.persistence.service;
 
 import com.lukastack.lukastackreddit.dto.VoteDto;
+import com.lukastack.lukastackreddit.error.ErrorCode;
 import com.lukastack.lukastackreddit.error.exceptions.PostNotFoundException;
 import com.lukastack.lukastackreddit.error.exceptions.SpringRedditException;
 import com.lukastack.lukastackreddit.mapper.VoteMapper;
@@ -25,7 +26,7 @@ public class VoteService {
     private final AuthService authService;
 
     @Transactional
-    public void vote(VoteDto voteDto) {
+    public VoteDto vote(VoteDto voteDto) {
 
         PostEntity post = postRepository.findById(voteDto.getPostId()).orElseThrow(
                 () -> new PostNotFoundException("Post with ID: "+ voteDto.getPostId() +" not found"));
@@ -34,7 +35,7 @@ public class VoteService {
 
         if (voteByPostAndUser.isPresent() &&
             voteByPostAndUser.get().getVoteType().equals(voteDto.getVoteType())) {
-            throw new SpringRedditException("You have already "+ voteDto.getVoteType() +"'d for this post");
+            throw new SpringRedditException("You have already "+ voteDto.getVoteType() +"'d for this post", ErrorCode.VOTE_ERROR);
         }
 
         if (VoteType.UP_VOTE.equals(voteDto.getVoteType())) {
@@ -46,5 +47,7 @@ public class VoteService {
 
         voteRepository.save(voteMapper.mapToVote(voteDto, post, authService.getCurrentUser()));
         postRepository.save(post);
+
+        return voteDto;
     }
 }

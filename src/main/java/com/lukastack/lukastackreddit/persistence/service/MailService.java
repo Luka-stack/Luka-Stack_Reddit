@@ -1,5 +1,6 @@
 package com.lukastack.lukastackreddit.persistence.service;
 
+import com.lukastack.lukastackreddit.error.ErrorCode;
 import com.lukastack.lukastackreddit.error.exceptions.SpringRedditException;
 import com.lukastack.lukastackreddit.model.NotificationEmail;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +32,7 @@ public class MailService {
             mailSender.send(messagePreparator);
         }
         catch (MailException e) {
-            throw new SpringRedditException("Couldn't send email to "+ notificationEmail.getRecipient() +"; "+ e);
+            throw new SpringRedditException("Couldn't send email to "+ notificationEmail.getRecipient(), ErrorCode.MAIL_ERROR);
         }
     }
 }

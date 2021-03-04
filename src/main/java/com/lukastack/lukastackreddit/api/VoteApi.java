@@ -10,5 +10,5 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public interface VoteApi {
 
     @PostMapping
-    ResponseEntity<Void> vote(@RequestBody VoteDto voteDto);
+    ResponseEntity<VoteDto> vote(@RequestBody VoteDto voteDto);
 }

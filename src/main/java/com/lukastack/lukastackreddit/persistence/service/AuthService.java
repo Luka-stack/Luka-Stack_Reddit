@@ -4,6 +4,7 @@ import com.lukastack.lukastackreddit.dto.AuthenticationResponse;
 import com.lukastack.lukastackreddit.dto.LoginRequest;
 import com.lukastack.lukastackreddit.dto.RefreshTokenRequest;
 import com.lukastack.lukastackreddit.dto.RegisterRequest;
+import com.lukastack.lukastackreddit.error.ErrorCode;
 import com.lukastack.lukastackreddit.error.exceptions.SpringRedditException;
 import com.lukastack.lukastackreddit.model.NotificationEmail;
 import com.lukastack.lukastackreddit.persistence.entity.UserEntity;
@@ -84,7 +85,7 @@ public class AuthService {
     public void verifyAccount(String token) {
 
         VerificationTokenEntity verificationToken = tokenRepository.findByToken(token).orElseThrow(
-                () -> new SpringRedditException("Invalid Token"));
+                () -> new SpringRedditException("Invalid Verification Token", ErrorCode.INVALID_VERIFICATION_TOKEN));
         fetchAndEnableUser(verificationToken);
     }
 
@@ -111,7 +112,7 @@ public class AuthService {
 
         String username = verificationToken.getUser().getUsername();
         UserEntity user = userRepository.findByUsername(username).orElseThrow(
-                () -> new SpringRedditException("User Not Found with id - " + username));
+                () -> new SpringRedditException("User Not Found with id - " + username, ErrorCode.USER_NOT_EXISTING));
         user.setEnabled(true);
         userRepository.save(user);
     }

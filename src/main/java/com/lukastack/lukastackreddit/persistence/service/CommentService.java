@@ -12,7 +12,6 @@ import com.lukastack.lukastackreddit.persistence.repository.CommentRepository;
 import com.lukastack.lukastackreddit.persistence.repository.PostRepository;
 import com.lukastack.lukastackreddit.persistence.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,15 +32,18 @@ public class CommentService {
     private final MailContentBuilder mailContentBuilder;
     private final CommentMapper commentMapper;
 
-    public void createComment(CommentDto commentDto) {
+    public CommentDto createComment(CommentDto commentDto) {
 
         PostEntity post = postRepository.findById(commentDto.getPostId()).orElseThrow(
                 () -> new PostNotFoundException("Post not found"));
         CommentEntity comment = commentMapper.mapToComment(commentDto, post, authService.getCurrentUser());
-        commentRepository.save(comment);
+        comment = commentRepository.save(comment);
+        commentDto.setCommentId(comment.getCommentId());
 
         String message = mailContentBuilder.build(authService.getCurrentUser() +" posted a comment on your post.");
         sendCommentNotification(message, post.getUser());
+
+        return commentDto;
     }
 
     public List<CommentDto> getCommentByPost(Long postId) {

@@ -1,5 +1,6 @@
 package com.lukastack.lukastackreddit.security;
 
+import com.lukastack.lukastackreddit.error.ErrorCode;
 import com.lukastack.lukastackreddit.error.exceptions.SpringRedditException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -37,7 +38,7 @@ public class JwtProvider {
             keyStore.load(resourceAsStream, "password".toCharArray());
         }
         catch (KeyStoreException | CertificateException | NoSuchAlgorithmException | IOException e) {
-            throw new SpringRedditException("Exception occurred while loading keystore");
+            throw new SpringRedditException("Exception occurred while loading keystore", ErrorCode.AUTH_ERROR);
         }
     }
 
@@ -88,7 +89,7 @@ public class JwtProvider {
             return keyStore.getCertificate("lukastack").getPublicKey();
         }
         catch (KeyStoreException e) {
-            throw new SpringRedditException("Exception occurred while retrieving public key");
+            throw new SpringRedditException("Exception occurred while retrieving public key", ErrorCode.AUTH_ERROR);
         }
     }
 
@@ -98,7 +99,7 @@ public class JwtProvider {
             return (PrivateKey) keyStore.getKey("lukastack", "password".toCharArray());
         }
         catch (KeyStoreException | NoSuchAlgorithmException | UnrecoverableKeyException e) {
-            throw new SpringRedditException("Exception occurred while retrieving public key");
+            throw new SpringRedditException("Exception occurred while retrieving public key", ErrorCode.AUTH_ERROR);
         }
     }
 

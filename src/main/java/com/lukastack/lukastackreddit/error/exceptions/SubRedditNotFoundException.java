@@ -1,8 +1,10 @@
 package com.lukastack.lukastackreddit.error.exceptions;
 
-public class SubRedditNotFoundException extends RuntimeException {
+import com.lukastack.lukastackreddit.error.ErrorCode;
+
+public class SubRedditNotFoundException extends CustomServiceException {
 
     public SubRedditNotFoundException(String message) {
-        super(message);
+        super(message, ErrorCode.SUBREDDIT_NOT_FOUND);
     }
 }

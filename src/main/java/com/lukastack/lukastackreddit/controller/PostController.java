@@ -18,9 +18,8 @@ public class PostController implements PostApi {
     private final PostService postService;
 
     @Override
-    public ResponseEntity<Void> createPost(PostRequest postRequest) {
-        postService.save(postRequest);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+    public ResponseEntity<PostResponse> createPost(PostRequest postRequest) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(postService.save(postRequest));
     }
 
     @Override

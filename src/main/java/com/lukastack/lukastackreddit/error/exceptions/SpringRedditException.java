@@ -1,8 +1,10 @@
 package com.lukastack.lukastackreddit.error.exceptions;
 
-public class SpringRedditException extends RuntimeException {
+import com.lukastack.lukastackreddit.error.ErrorCode;
 
-    public SpringRedditException(String message) {
-        super(message);
+public class SpringRedditException extends CustomServiceException {
+
+    public SpringRedditException(String message, ErrorCode errorCode) {
+        super(message, errorCode);
     }
 }

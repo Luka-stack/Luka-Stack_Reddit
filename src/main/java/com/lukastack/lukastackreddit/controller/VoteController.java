@@ -15,8 +15,7 @@ public class VoteController implements VoteApi {
     private final VoteService voteService;
 
     @Override
-    public ResponseEntity<Void> vote(VoteDto voteDto) {
-        voteService.vote(voteDto);
-        return new ResponseEntity<>(HttpStatus.OK);
+    public ResponseEntity<VoteDto> vote(VoteDto voteDto) {
+        return ResponseEntity.status(HttpStatus.OK).body(voteService.vote(voteDto));
     }
 }

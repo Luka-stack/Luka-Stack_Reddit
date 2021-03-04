@@ -1,5 +1,6 @@
 package com.lukastack.lukastackreddit.persistence.service;
 
+import com.lukastack.lukastackreddit.error.ErrorCode;
 import com.lukastack.lukastackreddit.error.exceptions.SpringRedditException;
 import com.lukastack.lukastackreddit.persistence.entity.RefreshTokenEntity;
 import com.lukastack.lukastackreddit.persistence.repository.RefreshTokenRepository;
@@ -29,7 +30,7 @@ public class RefreshTokenService {
     public void validateRefreshToken(String token) {
 
         refreshTokenRepository.findByToken(token).orElseThrow(
-                () -> new SpringRedditException("Invalid refresh token"));
+                () -> new SpringRedditException("Invalid refresh token", ErrorCode.INVALID_REFRESH_TOKEN));
     }
 
     public void deleteRefreshToken(String token) {

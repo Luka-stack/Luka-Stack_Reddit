@@ -11,9 +11,8 @@ import java.util.List;
 @RequestMapping("/api/posts")
 public interface PostApi {
 
-    // TODO Return Body
     @PostMapping
-    ResponseEntity<Void> createPost(@Valid @RequestBody PostRequest postRequest);
+    ResponseEntity<PostResponse> createPost(@Valid @RequestBody PostRequest postRequest);
 
     @GetMapping
     ResponseEntity<List<PostResponse>> getAllPosts();

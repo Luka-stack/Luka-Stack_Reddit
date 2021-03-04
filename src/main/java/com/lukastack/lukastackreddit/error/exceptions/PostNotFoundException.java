@@ -1,8 +1,10 @@
 package com.lukastack.lukastackreddit.error.exceptions;
 
-public class PostNotFoundException  extends RuntimeException {
+import com.lukastack.lukastackreddit.error.ErrorCode;
+
+public class PostNotFoundException  extends CustomServiceException {
 
     public PostNotFoundException(String message) {
-        super(message);
+        super(message, ErrorCode.POST_NOT_FOUND);
     }
 }
