@@ -26,7 +26,7 @@ public class SubRedditService {
 
         SubRedditEntity subReddit = subRedditRepository.save(subRedditMapper.mapToSubReddit(subRedditDto,
                 authService.getCurrentUser()));
-        subRedditDto.setId(subReddit.getSubId());
+        subRedditDto.setId(subReddit.getId());
 
         return subRedditDto;
     }

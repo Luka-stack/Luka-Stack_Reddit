@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class PostResponse {
 
-    private Long postId;
+    private Long id;
 
     private String postName;
 
@@ -17,7 +17,7 @@ public class PostResponse {
 
     private String description;
 
-    private String userName;
+    private String username;
 
     private String subRedditName;
 

@@ -23,7 +23,7 @@ public class UserEntity {
 
     @Id
     @GeneratedValue(strategy = SEQUENCE)
-    private Long userId;
+    private Long id;
 
     @NotBlank(message = "Username is required")
     private String username;

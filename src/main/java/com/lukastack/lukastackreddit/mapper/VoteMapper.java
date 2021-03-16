@@ -10,6 +10,7 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface VoteMapper {
 
+    @Mapping(target = "id", ignore = true)
     @Mapping(target = "post", source = "post")
     @Mapping(target = "voteType", source = "voteDto.voteType")
     @Mapping(target = "user", source = "user")

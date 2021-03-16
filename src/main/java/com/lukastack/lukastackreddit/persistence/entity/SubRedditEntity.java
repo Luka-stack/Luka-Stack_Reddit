@@ -20,7 +20,7 @@ public class SubRedditEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private Long subId;
+    private Long id;
 
     @NotBlank(message = "Community name is required")
     private String name;

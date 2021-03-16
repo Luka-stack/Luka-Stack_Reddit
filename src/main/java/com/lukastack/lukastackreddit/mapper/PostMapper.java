@@ -25,6 +25,7 @@ public abstract class PostMapper {
     @Autowired
     private AuthService authService;
 
+    @Mapping(target = "id", ignore = true)
     @Mapping(target = "createdDate", expression = "java(java.time.Instant.now())")
     @Mapping(target = "description", source = "postRequest.description")
     @Mapping(target = "subReddit", source = "subReddit")
@@ -33,7 +34,7 @@ public abstract class PostMapper {
     public abstract PostEntity mapToPost(PostRequest postRequest, SubRedditEntity subReddit, UserEntity user);
 
     @Mapping(target = "subRedditName", source = "subReddit.name")
-    @Mapping(target = "userName", source = "user.username")
+    @Mapping(target = "username", source = "user.username")
     @Mapping(target = "commentCount", expression = "java(commentCount(post))")
     @Mapping(target = "duration", expression = "java(getDuration(post))")
     @Mapping(target = "upVote", expression = "java(isPostUpVoted(post))")
@@ -60,7 +61,7 @@ public abstract class PostMapper {
 
         if (authService.isLoggedIn()) {
             Optional<VoteEntity> voteForPostByUser =
-                    voteRepository.findTopByPostAndUserOrderByVoteIdDesc(post, authService.getCurrentUser());
+                    voteRepository.findTopByPostAndUserOrderByIdDesc(post, authService.getCurrentUser());
             return voteForPostByUser.filter(vote -> vote.getVoteType().equals(voteType)).isPresent();
         }
 

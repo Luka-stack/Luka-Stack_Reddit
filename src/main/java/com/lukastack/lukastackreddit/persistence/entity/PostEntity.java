@@ -19,7 +19,7 @@ public class PostEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private Long postId;
+    private Long id;
 
     @NotBlank(message = "Post Name cannot be empty or Null")
     private String postName;
@@ -36,10 +36,10 @@ public class PostEntity {
     private Instant createdDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "userId", referencedColumnName = "userId")
+    @JoinColumn(name = "userId", referencedColumnName = "id")
     private UserEntity user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "subId", referencedColumnName = "subId")
+    @JoinColumn(name = "subId", referencedColumnName = "id")
     private SubRedditEntity subReddit;
 }

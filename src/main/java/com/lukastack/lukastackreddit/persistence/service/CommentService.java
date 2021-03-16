@@ -38,7 +38,7 @@ public class CommentService {
                 () -> new PostNotFoundException("Post not found"));
         CommentEntity comment = commentMapper.mapToComment(commentDto, post, authService.getCurrentUser());
         comment = commentRepository.save(comment);
-        commentDto.setCommentId(comment.getCommentId());
+        commentDto.setId(comment.getId());
 
         String message = mailContentBuilder.build(authService.getCurrentUser() +" posted a comment on your post.");
         sendCommentNotification(message, post.getUser());

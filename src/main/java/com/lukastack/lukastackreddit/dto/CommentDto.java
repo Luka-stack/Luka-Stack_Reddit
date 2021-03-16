@@ -11,7 +11,7 @@ import java.time.Instant;
 @AllArgsConstructor
 public class CommentDto {
 
-    private Long commentId;
+    private Long id;
 
     private Long postId;
 

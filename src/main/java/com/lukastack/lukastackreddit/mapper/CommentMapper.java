@@ -10,13 +10,13 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface CommentMapper {
 
-    @Mapping(target = "commentId", ignore = true)
+    @Mapping(target = "id", ignore = true)
     @Mapping(target = "text", source = "commentDto.text")
     @Mapping(target = "createdDate", expression = "java(java.time.Instant.now())")
     @Mapping(target = "post", source = "post")
     CommentEntity mapToComment(CommentDto commentDto, PostEntity post, UserEntity user);
 
-    @Mapping(target = "postId", expression = "java(comment.getPost().getPostId())")
+    @Mapping(target = "postId", expression = "java(comment.getPost().getId())")
     @Mapping(target = "username", expression = "java(comment.getUser().getUsername())")
     CommentDto mapToDto(CommentEntity comment);
 }
